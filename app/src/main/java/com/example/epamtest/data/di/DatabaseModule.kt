@@ -1,4 +1,4 @@
-package com.example.epamtest.di
+package com.example.epamtest.data.di
 
 import android.content.Context
 import androidx.room.Room

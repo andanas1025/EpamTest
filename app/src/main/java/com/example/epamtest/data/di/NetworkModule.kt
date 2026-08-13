@@ -1,4 +1,4 @@
-package com.example.epamtest.di
+package com.example.epamtest.data.di
 
 import com.example.epamtest.data.remote.TopicsApi
 import dagger.Module
