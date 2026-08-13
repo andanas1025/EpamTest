@@ -44,7 +44,7 @@ class TopicsViewModel @Inject constructor(
         refreshTopics()
     }
 
-    private fun refreshTopics() {
+    internal fun refreshTopics() {
         viewModelScope.launch {
             _refreshState.value = null
 

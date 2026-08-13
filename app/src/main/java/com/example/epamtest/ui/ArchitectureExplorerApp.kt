@@ -22,6 +22,7 @@ fun ArchitectureExplorerApp() {
 
         TopicsScreen(
             uiState = uiState,
+            onRefresh = viewModel::refreshTopics,
             modifier = Modifier.padding(innerPadding)
         )
 
