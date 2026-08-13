@@ -6,6 +6,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.epamtest.ui.topics.TopicsScreen
+import com.example.epamtest.ui.topics.TopicsUiState
+import com.example.epamtest.ui.topics.sampleTopics
 
 @Composable
 fun ArchitectureExplorerApp() {
@@ -14,6 +16,9 @@ fun ArchitectureExplorerApp() {
     ) { innerPadding ->
 
         TopicsScreen(
+            uiState = TopicsUiState(
+                topics = sampleTopics
+            ),
             modifier = Modifier.padding(innerPadding)
         )
 

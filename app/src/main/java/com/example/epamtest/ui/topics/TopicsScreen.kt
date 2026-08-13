@@ -10,34 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.epamtest.ui.topics.model.Topic
-
-private val topics = listOf(
-    Topic(
-        id = "mvvm",
-        title = "MVVM",
-        description = "Model-View-ViewModel"
-    ),
-    Topic(
-        id = "mvi",
-        title = "MVI",
-        description = "Model-View-Intent"
-    ),
-    Topic(
-        id = "clean",
-        title = "Clean Architecture",
-        description = "Separation of Concerns"
-    )
-)
 
 @Composable
 fun TopicsScreen(
+    uiState: TopicsUiState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(topics) { topic ->
+        items(uiState.topics) { topic ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
