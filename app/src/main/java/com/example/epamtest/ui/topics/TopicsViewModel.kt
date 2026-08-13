@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TopicsViewModel : ViewModel() {
+class TopicsViewModel(
+    private val repository: TopicsRepository
+) : ViewModel() {
 
-    private val repository = TopicsRepository()
     private val _uiState = MutableStateFlow(
         TopicsUiState()
     )
@@ -21,6 +22,9 @@ class TopicsViewModel : ViewModel() {
 
     private fun loadTopics() {
         viewModelScope.launch {
+
+            repository.initialize()
+
             repository
                 .getTopics()
                 .collect { topics ->
