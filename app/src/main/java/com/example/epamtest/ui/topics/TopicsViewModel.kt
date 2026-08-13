@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.epamtest.data.repository.TopicsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,27 +16,24 @@ class TopicsViewModel @Inject constructor(
     private val repository: TopicsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        TopicsUiState()
-    )
-    val uiState: StateFlow<TopicsUiState> = _uiState
+    val uiState: StateFlow<TopicsUiState> = repository
+        .observeTopics()
+        .map { topics ->
+            TopicsUiState(
+                topics = topics
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = TopicsUiState(
+                isLoading = true
+            )
+        )
 
     init {
-        loadTopics()
-    }
-
-    private fun loadTopics() {
         viewModelScope.launch {
-
-            repository.initialize()
-
-            repository
-                .getTopics()
-                .collect { topics ->
-                    _uiState.value = TopicsUiState(
-                        topics = topics
-                    )
-                }
+            repository.refreshTopics()
         }
     }
 }
