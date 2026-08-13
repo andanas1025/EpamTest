@@ -2,11 +2,13 @@ package com.example.epamtest.ui.topics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.epamtest.data.repository.RefreshResult
 import com.example.epamtest.data.repository.TopicsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,14 +18,21 @@ class TopicsViewModel @Inject constructor(
     private val repository: TopicsRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<TopicsUiState> = repository
-        .observeTopics()
-        .map { topics ->
+    private val _refreshState = MutableStateFlow<RefreshResult?>(null)
+    val uiState: StateFlow<TopicsUiState> =
+        combine(
+            repository.observeTopics(),
+            _refreshState
+        ) { topics, refreshResult ->
             TopicsUiState(
-                topics = topics
+                topics = topics,
+                isLoading = refreshResult == null,
+                error = when (refreshResult) {
+                    is RefreshResult.Error -> refreshResult.exception.message
+                    else -> null
+                }
             )
-        }
-        .stateIn(
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = TopicsUiState(
@@ -32,8 +41,16 @@ class TopicsViewModel @Inject constructor(
         )
 
     init {
+        refreshTopics()
+    }
+
+    private fun refreshTopics() {
         viewModelScope.launch {
-            repository.refreshTopics()
+            _refreshState.value = null
+
+            val result = repository.refreshTopics()
+
+            _refreshState.value = result
         }
     }
 }

@@ -20,18 +20,25 @@ class TopicsRepository @Inject constructor(
                 entities.map { it.toDomain() }
             }
 
-    suspend fun refreshTopics() {
-        val remoteTopics = remoteDataSource.getTopics()
+    suspend fun refreshTopics(): RefreshResult {
+        return try {
+            val remoteTopics = remoteDataSource.getTopics()
 
-        val entities = remoteTopics.map { dto ->
-            TopicEntity(
-                id = dto.id.toString(),
-                title = dto.title,
-                description = dto.body
-            )
+            val entities = remoteTopics.map { dto ->
+                TopicEntity(
+                    id = dto.id.toString(),
+                    title = dto.title,
+                    description = dto.body
+                )
+            }
+
+            localDataSource.insertTopics(entities)
+
+            RefreshResult.Success
+
+        } catch (exception: Exception) {
+            RefreshResult.Error(exception)
         }
-
-        localDataSource.insertTopics(entities)
     }
 }
 
