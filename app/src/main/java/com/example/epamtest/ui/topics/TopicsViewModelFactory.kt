@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.epamtest.data.repository.TopicsRepository
 
+@Deprecated("This class is not using by any class")
 class TopicsViewModelFactory(
     private val repository: TopicsRepository
 ) : ViewModelProvider.Factory {

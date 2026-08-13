@@ -5,8 +5,9 @@ import com.example.epamtest.data.local.TopicsDao
 import com.example.epamtest.model.Topic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TopicsRepository(
+class TopicsRepository @Inject constructor(
     private val topicsDao: TopicsDao
 ) {
 

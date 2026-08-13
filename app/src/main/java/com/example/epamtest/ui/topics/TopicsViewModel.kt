@@ -3,11 +3,14 @@ package com.example.epamtest.ui.topics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.epamtest.data.repository.TopicsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TopicsViewModel(
+@HiltViewModel
+class TopicsViewModel @Inject constructor(
     private val repository: TopicsRepository
 ) : ViewModel() {
 
