@@ -2,14 +2,15 @@ package com.example.epamtest.data.repository
 
 import com.example.epamtest.data.local.TopicEntity
 import com.example.epamtest.data.local.TopicsLocalDataSource
-import com.example.epamtest.data.local.initialTopics
+import com.example.epamtest.data.remote.TopicsRemoteDataSource
 import com.example.epamtest.model.Topic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TopicsRepository @Inject constructor(
-    private val localDataSource: TopicsLocalDataSource
+    private val localDataSource: TopicsLocalDataSource,
+    private val remoteDataSource: TopicsRemoteDataSource
 ) {
 
     fun observeTopics(): Flow<List<Topic>> =
@@ -20,9 +21,17 @@ class TopicsRepository @Inject constructor(
             }
 
     suspend fun refreshTopics() {
-        localDataSource.insertTopics(
-            initialTopics.map { it.toEntity() }
-        )
+        val remoteTopics = remoteDataSource.getTopics()
+
+        val entities = remoteTopics.map { dto ->
+            TopicEntity(
+                id = dto.id.toString(),
+                title = dto.title,
+                description = dto.body
+            )
+        }
+
+        localDataSource.insertTopics(entities)
     }
 }
 
