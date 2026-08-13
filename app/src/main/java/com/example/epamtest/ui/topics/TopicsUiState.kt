@@ -1,6 +1,6 @@
 package com.example.epamtest.ui.topics
 
-import com.example.epamtest.ui.topics.model.Topic
+import com.example.epamtest.model.Topic
 
 data class TopicsUiState(
     val topics: List<Topic> = emptyList(),

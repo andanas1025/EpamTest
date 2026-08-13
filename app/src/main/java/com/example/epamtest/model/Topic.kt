@@ -1,4 +1,4 @@
-package com.example.epamtest.ui.topics.model
+package com.example.epamtest.model
 
 data class Topic(
     val id: String,
